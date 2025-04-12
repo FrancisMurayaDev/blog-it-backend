@@ -4,7 +4,7 @@ import pkg from "@prisma/client";
 const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET;
+
 
 export const registerUser = async (req, res) => {
   const { firstName, lastName, email, username, password } = req.body;
