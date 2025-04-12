@@ -42,7 +42,7 @@ export const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Signup error:", error);
-    return res.status(500).json({ message: "Something went wrong" });
+    return res.status(500).json({ message: "Something went wrong", error: error.message });
   }
 };
 
@@ -50,6 +50,8 @@ export const loginUser = async (req, res) => {
   const { identifier, password } = req.body;
 
   try {
+    console.log("Login attempt for:", identifier);
+
     const user = await prisma.user.findFirst({
       where: {
         OR: [{ email: identifier }, { username: identifier }],
@@ -57,15 +59,21 @@ export const loginUser = async (req, res) => {
     });
 
     if (!user) {
+      console.log("User not found");
       return res.status(404).json({ message: "User not found" });
     }
 
+    console.log("User found:", user.email);
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log("Password mismatch");
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "7d" });
+
+    console.log("Login successful for:", user.username);
 
     return res.status(200).json({
       message: "Login successful",
@@ -78,7 +86,6 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(500).json({ message: "Login failed" });
+    return res.status(500).json({ message: "Login failed", error: error.message });
   }
 };
-
