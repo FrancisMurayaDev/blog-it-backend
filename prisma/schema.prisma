@@ -15,6 +15,21 @@ model User {
   username  String   @unique @map("username")
   password  String   @map("password")
   createdAt DateTime @default(now()) @map("created_at")
+  blogs     Blog[]
 
   @@map("users")
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  title     String
+  excerpt   String
+  body      String
+  image     String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @map("author_id")
+
+  @@map("blogs")
 }
