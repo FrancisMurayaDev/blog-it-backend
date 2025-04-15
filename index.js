@@ -3,6 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import protectedRoutes from "./routes/protected.js";
+import blogRoutes from "./routes/blogs.js";
+
+
+app.use("/api/blogs", blogRoutes);
+
 
 dotenv.config();
 
