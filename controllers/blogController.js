@@ -3,27 +3,60 @@ const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
-
 export const getAllBlogs = async (req, res) => {
   try {
     const blogs = await prisma.blog.findMany({
       include: {
         author: {
           select: {
-            id: true,
             username: true,
             email: true,
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json(blogs);
+  } catch (err) {
+    console.error("Error fetching blogs:", err);
+    res.status(500).json({ message: "Failed to fetch blogs" });
+  }
+};
+
+export const getMyBlogs = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const blogs = await prisma.blog.findMany({
+      where: { authorId: userId },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json(blogs);
+  } catch (err) {
+    console.error("Error fetching user's blogs:", err);
+    res.status(500).json({ message: "Failed to fetch user's blogs" });
+  }
+};
+
+export const createBlog = async (req, res) => {
+  const { title, excerpt, body, image } = req.body;
+
+  try {
+    const newBlog = await prisma.blog.create({
+      data: {
+        title,
+        excerpt,
+        body,
+        image,
+        authorId: req.user.userId,
       },
     });
 
-    res.status(200).json(blogs);
+    res.status(201).json(newBlog);
   } catch (error) {
-    console.error("Failed to fetch blogs:", error);
-    res.status(500).json({ message: "Failed to fetch blogs" });
+    console.error("Error creating blog:", error);
+    res.status(500).json({ message: "Failed to create blog" });
   }
 };
