@@ -60,3 +60,30 @@ export const createBlog = async (req, res) => {
     res.status(500).json({ message: "Failed to create blog" });
   }
 };
+
+export const getSingleBlog = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        author: {
+          select: {
+            username: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+    res.json(blog);
+  } catch (error) {
+    console.error("Error fetching blog:", error);
+    res.status(500).json({ message: "Failed to fetch blog" });
+  }
+};
+
