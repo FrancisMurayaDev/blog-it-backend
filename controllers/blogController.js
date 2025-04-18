@@ -43,7 +43,7 @@ export const createBlog = async (req, res) => {
         title,
         excerpt,
         body,
-        image: req.file?.path || "", 
+        image: req.file?.path || "",
         authorId: req.user.userId,
       },
     });

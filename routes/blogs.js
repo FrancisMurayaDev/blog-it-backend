@@ -15,7 +15,6 @@ const upload = multer({ storage });
 router.get("/", getAllBlogs);
 router.get("/:id", getSingleBlog);
 
-
 router.get("/mine", protect, getMyBlogs);
 router.post("/", protect, upload.single("image"), createBlog);
 

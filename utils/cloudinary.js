@@ -1,5 +1,5 @@
-import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -10,8 +10,8 @@ cloudinary.config({
 export const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    folder: 'blogit_uploads',
-    allowed_formats: ['jpg', 'jpeg', 'png'],
+    folder: "blogit_uploads",
+    allowed_formats: ["jpg", "jpeg", "png"],
   },
 });
 
