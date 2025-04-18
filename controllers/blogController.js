@@ -3,7 +3,6 @@ const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
-
 export const getAllBlogs = async (req, res) => {
   try {
     const blogs = await prisma.blog.findMany({
@@ -21,7 +20,6 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
-
 export const getMyBlogs = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -36,9 +34,8 @@ export const getMyBlogs = async (req, res) => {
   }
 };
 
-
 export const createBlog = async (req, res) => {
-  const { title, excerpt, body, image } = req.body;
+  const { title, excerpt, body } = req.body;
 
   try {
     const newBlog = await prisma.blog.create({
@@ -46,7 +43,7 @@ export const createBlog = async (req, res) => {
         title,
         excerpt,
         body,
-        image,
+        image: req.file?.path || "", 
         authorId: req.user.userId,
       },
     });
@@ -56,7 +53,6 @@ export const createBlog = async (req, res) => {
     res.status(500).json({ message: "Failed to create blog" });
   }
 };
-
 
 export const getSingleBlog = async (req, res) => {
   const { id } = req.params;
