@@ -3,15 +3,18 @@ import {
   getAllBlogs,
   getMyBlogs,
   createBlog,
+  getSingleBlog,
 } from "../controllers/blogController.js";
 import { protect } from "../middleware/authMiddleware.js";
-import { getSingleBlog } from "../controllers/blogController.js";
 
 const router = express.Router();
 
+
 router.get("/", getAllBlogs);
-router.get("/mine", protect, getMyBlogs);
-router.post("/", protect, createBlog); 
 router.get("/:id", getSingleBlog);
+
+
+router.get("/mine", protect, getMyBlogs);
+router.post("/", protect, createBlog);
 
 export default router;
