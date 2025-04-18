@@ -1,5 +1,6 @@
 import pkg from "@prisma/client";
 const { PrismaClient } = pkg;
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 const prisma = new PrismaClient();
 
@@ -38,15 +39,23 @@ export const createBlog = async (req, res) => {
   const { title, excerpt, body } = req.body;
 
   try {
+    let imageUrl = "";
+
+    if (req.file) {
+      const uploadedImage = await uploadToCloudinary(req.file.path);
+      imageUrl = uploadedImage.secure_url;
+    }
+
     const newBlog = await prisma.blog.create({
       data: {
         title,
         excerpt,
         body,
-        image: req.file?.path || "",
+        image: imageUrl,
         authorId: req.user.userId,
       },
     });
+
     res.status(201).json(newBlog);
   } catch (error) {
     console.error("Error creating blog:", error);
