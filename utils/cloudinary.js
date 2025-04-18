@@ -19,10 +19,14 @@ const storage = new CloudinaryStorage({
 
 const uploadToCloudinary = (filePath) =>
   new Promise((resolve, reject) => {
-    cloudinary.uploader.upload(filePath, { folder: "blogit" }, (err, result) => {
-      if (err) return reject(err);
-      resolve(result);
-    });
+    cloudinary.uploader.upload(
+      filePath,
+      { folder: "blogit" },
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      },
+    );
   });
 
 export { storage, uploadToCloudinary };
