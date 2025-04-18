@@ -3,20 +3,17 @@ const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
+
 export const getAllBlogs = async (req, res) => {
   try {
     const blogs = await prisma.blog.findMany({
       include: {
         author: {
-          select: {
-            username: true,
-            email: true,
-          },
+          select: { username: true, email: true },
         },
       },
       orderBy: { createdAt: "desc" },
     });
-
     res.json(blogs);
   } catch (err) {
     console.error("Error fetching blogs:", err);
@@ -24,21 +21,21 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
+
 export const getMyBlogs = async (req, res) => {
   try {
     const userId = req.user.userId;
-
     const blogs = await prisma.blog.findMany({
       where: { authorId: userId },
       orderBy: { createdAt: "desc" },
     });
-
     res.json(blogs);
   } catch (err) {
     console.error("Error fetching user's blogs:", err);
     res.status(500).json({ message: "Failed to fetch user's blogs" });
   }
 };
+
 
 export const createBlog = async (req, res) => {
   const { title, excerpt, body, image } = req.body;
@@ -53,7 +50,6 @@ export const createBlog = async (req, res) => {
         authorId: req.user.userId,
       },
     });
-
     res.status(201).json(newBlog);
   } catch (error) {
     console.error("Error creating blog:", error);
@@ -61,17 +57,16 @@ export const createBlog = async (req, res) => {
   }
 };
 
+
 export const getSingleBlog = async (req, res) => {
   const { id } = req.params;
+
   try {
     const blog = await prisma.blog.findUnique({
       where: { id: parseInt(id) },
       include: {
         author: {
-          select: {
-            username: true,
-            email: true,
-          },
+          select: { username: true, email: true },
         },
       },
     });
@@ -86,4 +81,3 @@ export const getSingleBlog = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch blog" });
   }
 };
-
